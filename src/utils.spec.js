@@ -1,7 +1,7 @@
 import { findMatches, spanWrapSearchTerm, boldSearchTerm } from './utils'
 
 describe('findMatches', () => {
-  const options = ['Jorge Luis Borges', 'Voltaire', 'Oscar Wilde', 'Julio Cortazar', 'T.S. Eliot']
+  const options = ['Jorge Luis Borges', 'Voltaire', 'Oscar Wilde', 'Julio Cortázar', 'T.S. Eliot']
 
   it('should find matches', () => {
     const searchTerm = 'g'
@@ -13,7 +13,7 @@ describe('findMatches', () => {
   it('should find matches of mixed upper/lowercase', () => {
     const searchTerm = 'j'
     const result = findMatches(options, searchTerm)
-    const expectedResult = ['Jorge Luis Borges', 'Julio Cortazar']
+    const expectedResult = ['Jorge Luis Borges', 'Julio Cortázar']
     
     expect(result).toEqual(expectedResult)
   })
@@ -32,6 +32,14 @@ describe('findMatches', () => {
     
     expect(result).toEqual([])
   })
+
+  it('should find matches ignoring the diacritics', () => {
+    const searchTerm = 'Cortazar'
+    const result = findMatches(options, searchTerm)
+    const expectedResult = ['Julio Cortázar']
+    
+    expect(result).toEqual(expectedResult)
+  })
 })
 
 describe('spanWrapSearchTerm', () => {
@@ -47,13 +55,13 @@ describe('spanWrapSearchTerm', () => {
 })
 
 describe('boldSearchTerm', () => {
-  const cortazar = 'Julio Cortazar'
+  const cortazar = 'Julio Cortázar'
   
   it('should wrap matching substrings in a <span> element', () => {
     const option = cortazar
     const searchTerm = 'o'
     const result = boldSearchTerm(option, searchTerm)
-    const expectedResult = 'Juli<span>o</span> C<span>o</span>rtazar'
+    const expectedResult = 'Juli<span>o</span> C<span>o</span>rtázar'
 
     expect(result).toBe(expectedResult)
   })
@@ -62,7 +70,7 @@ describe('boldSearchTerm', () => {
     const option = cortazar
     const searchTerm = 'c'
     const result = boldSearchTerm(option, searchTerm)
-    const expectedResult = 'Julio <span>C</span>ortazar'
+    const expectedResult = 'Julio <span>C</span>ortázar'
 
     expect(result).toBe(expectedResult)
   })
@@ -72,6 +80,15 @@ describe('boldSearchTerm', () => {
     const searchTerm = 'Y'
     const result = boldSearchTerm(option, searchTerm)
     const expectedResult = cortazar
+
+    expect(result).toBe(expectedResult)
+  })
+
+  it('should return the span-wrapped search term ignoring the diacritics', () => {
+    const option = cortazar
+    const searchTerm = 'Cortazar'
+    const result = boldSearchTerm(option, searchTerm)
+    const expectedResult = 'Julio <span>Cortázar</span>'
 
     expect(result).toBe(expectedResult)
   })

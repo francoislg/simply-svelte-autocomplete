@@ -1,24 +1,26 @@
+const normalize = (text) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, '');
+
 export const findMatches = (options, searchTerm) =>
   options.filter(option => {
-    const foundIndex = option.toLowerCase().indexOf(
-      searchTerm.toLowerCase()
-    )
+    const foundIndex = normalize(option.toLowerCase()).indexOf(
+      normalize(searchTerm.toLowerCase())
+    );
 
     return foundIndex > -1
   })
 
 export const spanWrapSearchTerm = (option, foundIndex, searchTermLength) => {
   const searchTerm = option.slice(foundIndex, foundIndex + searchTermLength)
-  
+
   return `<span>${searchTerm}</span>`
 }
 
 export const boldSearchTerm = (option, searchTerm) => {
-  const lowercaseOption = option.toLowerCase()
-  const lowercaseSearchTerm = searchTerm.toLowerCase()
+  const lowercaseOption = normalize(option).toLowerCase()
+  const lowercaseSearchTerm = normalize(searchTerm).toLowerCase()
   let foundIndex = lowercaseOption.indexOf(lowercaseSearchTerm)
   let html = ''
-  
+
   if (!searchTerm) return option
 
   while (foundIndex !== -1) {
